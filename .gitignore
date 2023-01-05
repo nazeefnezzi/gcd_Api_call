@@ -1,4 +1,4 @@
 .env
-csv/result.csv
+csv/*
 arngr.csv
 arngr_bkp.csv

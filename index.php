@@ -10,6 +10,11 @@ require_once(__DIR__ . "/services/generate_csv.php");
 $baseurl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 $API_key = "API_KEY";
 $looparr = [];
+$source_file = __DIR__ . "/csv/sourcedata.csv";
+if (!file_exists($source_file)) {
+    throw new Exception('Source data is not found.');
+    exit();
+}
 
 if (($handel = fopen("arngr.csv", "r")) !== false) {
     if (($data = fgetcsv($handel, 1000, ";")) !== false) {
@@ -52,7 +57,7 @@ foreach ($looparr as $item) {
 #++++++++++++++++++++++++++++++++++++#
 # ------- Generate CSV --------------#
 #++++++++++++++++++++++++++++++++++++#
-
+echo "Generating Target file";
 
 
 $csv_file_path = __DIR__ . "/csv/result.csv";
