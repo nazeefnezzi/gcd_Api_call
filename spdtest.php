@@ -6,6 +6,10 @@ $timestart = microtime(true);
 // import file
 
 require_once(__DIR__ . "/services/generate_csv.php");
+require 'vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 
 $arg_parm = $argv[1];
 if ($arg_parm == "" || !$arg_parm) {
@@ -14,14 +18,28 @@ if ($arg_parm == "" || !$arg_parm) {
 }
 
 echo $arg_parm;
+# get excel file
+$input_file = __DIR__ . "/Input/" . $arg_parm . ".xlsx";
+$source_file = __DIR__ . "/csv/" . $arg_parm . ".csv";
+# read xcel file
+$spreadsheet = IOFactory::load($input_file);
+# convert the xcel file
+$writer = IOFactory::createWriter($spreadsheet, 'Csv');
+$writer->setDelimiter(';');
+$writer->setEnclosure('');
+$writer->setLineEnding("\r\n");
+$writer->setSheetIndex(0);
+$writer->save($source_file);
+echo "file converted \n";
+
 
 
 $baseurl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 $API_key = "&key=";
 $looparr = [];
 #$source_file = __DIR__ . "/csv/sourcedata.csv";
-$source_file = __DIR__ . "/csv/" . $arg_parm . ".csv";
-echo $source_file;
+#$source_file = __DIR__ . "/csv/" . $arg_parm . ".csv";
+echo $source_file . "\n";
 //exit();
 if (!file_exists($source_file)) {
     throw new Exception('Source data is not found.');
@@ -37,8 +55,6 @@ if (($handel = fopen($source_file, "r")) !== false) {
     }
     fclose($handel);
 }
-
-// exit();
 
 $i = 0;
 $api_test_arr = [];
@@ -70,15 +86,6 @@ foreach ($looparr as $item) {
 }
 
 
-#print_r($url);
-#print_r($looparr);
-// $test_call = $baseurl. urlencode($url[0]) .$API_key;
-// $resulllt = test_call_map(urlencode($url[0]), $baseurl, $API_key);
-#print_r($api_test_arr);
-// $time_end = microtime(true);
-// echo ($time_end - $timestart) ;
-// print_r($final_arr);
-// exit();
 
 #++++++++++++++++++++++++++++++++++++#
 # ------- Generate CSV --------------#
@@ -129,4 +136,4 @@ function test_call_map($url, $baseurl, $API_key)
 
 
 $time_end = microtime(true);
-echo ($time_end - $timestart);
+echo ($time_end - $timestart) . "\n";

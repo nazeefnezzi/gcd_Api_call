@@ -1,6 +1,8 @@
 .env
-csv/*
+# csv/*
+Input/test_arngr.xlsx
 arngr.csv
 arngr_bkp.csv
 pvt_src/
 out.txt
+/vendor/
