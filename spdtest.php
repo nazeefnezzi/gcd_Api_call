@@ -18,43 +18,25 @@ if ($arg_parm == "" || !$arg_parm) {
 }
 
 echo $arg_parm;
-# get excel file
+# get excel file and write to an array
 $input_file = __DIR__ . "/Input/" . $arg_parm . ".xlsx";
-$source_file = __DIR__ . "/csv/" . $arg_parm . ".csv";
-# read xcel file
 $spreadsheet = IOFactory::load($input_file);
-# convert the xcel file
-$writer = IOFactory::createWriter($spreadsheet, 'Csv');
-$writer->setDelimiter(';');
-$writer->setEnclosure('');
-$writer->setLineEnding("\r\n");
-$writer->setSheetIndex(0);
-$writer->save($source_file);
-echo "file converted \n";
+$worksheet = $spreadsheet->getActiveSheet();
+$data = $worksheet->toArray();
+$keys = array_shift($data);
+$looparr = [];
+foreach ($data as $d => $row) {
+    $looparr[$d] = array_combine($keys, $row);
+}
 
-
+#print_r($looparr);
+#exit();
 
 $baseurl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 $API_key = "&key=";
-$looparr = [];
-#$source_file = __DIR__ . "/csv/sourcedata.csv";
-#$source_file = __DIR__ . "/csv/" . $arg_parm . ".csv";
-echo $source_file . "\n";
-//exit();
-if (!file_exists($source_file)) {
-    throw new Exception('Source data is not found.');
-    exit();
-}
 
-if (($handel = fopen($source_file, "r")) !== false) {
-    if (($data = fgetcsv($handel, 1000, ";")) !== false) {
-        $keys = $data;
-    }
-    while (($data = fgetcsv($handel, 1000, ";")) !== false) {
-        $looparr[] = array_combine($keys, $data);
-    }
-    fclose($handel);
-}
+
+
 
 $i = 0;
 $api_test_arr = [];
@@ -93,7 +75,7 @@ foreach ($looparr as $item) {
 echo "Generating Target file";
 
 
-$csv_file_path = __DIR__ . "/csv/result.csv";
+$csv_file_path = __DIR__ . "/csv/".$arg_parm."_result.csv";
 $csv_header = array_keys($final_arr[0]);
 generateCsv($csv_file_path, $csv_header, $final_arr);
 
