@@ -29,8 +29,9 @@ foreach ($data as $d => $row) {
     $looparr[$d] = array_combine($keys, $row);
 }
 
-#print_r($looparr);
-#exit();
+// print_r($looparr);
+// exit();
+##############
 
 $baseurl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 $API_key = "&key=";
@@ -41,7 +42,7 @@ $API_key = "&key=";
 $i = 0;
 $api_test_arr = [];
 foreach ($looparr as $item) {
-    $d_address = $item['SCHOOL_NAME'] . "  " . $item['VILLAGE_NAME'] . "  " . $item['BLOCK_NAME'] . "  " . $item['PINCODE'];
+    $d_address = $item['name'] . "  " . $item['city'] . "  " . $item['address_line1'] . "  " . $item['pin_code'];
     $url[$i] = $d_address;
 
     #$api_test_arr[$i] = test_call_map(urlencode($url[$i]), $baseurl, $API_key);
@@ -53,11 +54,13 @@ foreach ($looparr as $item) {
 
             $final_arr[$i]  = [
 
-                'SchoolCode' => $item['SCHOOL_CODE'],
-                // 'SchoolName' => $item['SCHOOL_NAME'],
-                // 'VillageName' => $item['VILLAGE_NAME'],
+                'id' => $item['id'],
+                'college_name' => $item['name'],
+                'pin_code' => $item['pin_code'],
                 // 'PinCode' => $item['PINCODE'],
                 // 'District' => $item['DISTNAME'],
+                'city' => $item['city'],
+                'state' => $item['statename'],
                 'lattitude' => @$r['lat'],
                 'longitude' => @$r['long']
             ];
@@ -75,7 +78,7 @@ foreach ($looparr as $item) {
 echo "Generating Target file";
 
 
-$csv_file_path = __DIR__ . "/csv/".$arg_parm."_result.csv";
+$csv_file_path = __DIR__ . "/csv/" . $arg_parm . "_result.csv";
 $csv_header = array_keys($final_arr[0]);
 generateCsv($csv_file_path, $csv_header, $final_arr);
 
