@@ -17,11 +17,11 @@ function generateCsv( $filePath, $header, $body ){
         $csvBody  = [
 
             # Csv data set
-             $bitem['SchoolCode'],
-            // $bitem['SchoolName'],
-            // $bitem['VillageName'],
-            // $bitem['PinCode'],
-            // $bitem['District'],
+             $bitem['id'],
+            $bitem['college_name'],
+            $bitem['pin_code'],
+            $bitem['city'],
+            $bitem['state'],
             (string)($bitem['lattitude']),
             (string)$bitem['longitude']
         ];
